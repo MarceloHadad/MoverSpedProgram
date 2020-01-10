@@ -38,17 +38,14 @@ namespace MoverSped
                     string text = PdfTextExtractor.GetTextFromPage(reader, 1);
                     string[] lines = text.Split('\n');
 
-                    //for(int i = 0; i<lines.Length; i++)
-                    //{
-                    //    Console.WriteLine(i + " " + lines[i]);
-                    //}
 
                     if (lines[5].Contains(recibo.EhPIS))
                     {
-                        //Console.WriteLine("É PIS");
-                        recibo.Status = lines[8].Substring(36, 8);
+                        recibo.Status = lines[8].Substring(36, 8).ToUpper();
                         recibo.Competencia = lines[10].Substring(21, 10);
                         recibo.CNPJ = lines[8].Substring(6, 18).Replace("-", "").Replace(".", "").Replace("/", "");
+
+                        reader.Close();
 
                         recibo.CaminhoCriarPasta = recibo.TargetPath + "\\" + recibo.CNPJ + "\\" + recibo.Competencia.Substring(6, 4) + "\\" + recibo.Competencia.Substring(3, 2) + "\\PIS";
 
@@ -58,7 +55,7 @@ namespace MoverSped
 
                             Console.WriteLine(arquivo);
                             Console.WriteLine(NovoNome);
-                            //File.Move(arquivo, NovoNome);
+                            File.Move(arquivo, NovoNome);
                         }
 
                         else
@@ -67,19 +64,48 @@ namespace MoverSped
 
                             string NovoNome = recibo.CaminhoCriarPasta + "\\" + DateTime.Now.ToString("dd-MM-yyy HHmmss") + " " + nomeArquivo;
 
-                            //File.Move(arquivo, NovoNome);
+                            File.Move(arquivo, NovoNome);
 
                         }
                     }
 
-                    //if (lines[4].Contains("RECIBO DE ENTREGA DE ESCRITURAÇÃO FISCAL DIGITAL"))
-                    //{
-                    //    Console.WriteLine("É ICMS");
-                    //}
+                    if (lines[4].Contains(recibo.EhICMS))
+                    {
+                        //for(int i = 0; i<lines.Length; i++)
+                        //{
+                        //    Console.WriteLine(i + lines[i]);
+                        //}
 
-                    //recibo.Status = lines[4];
+                        recibo.Status = lines[8].Substring(42, 8).ToUpper();
+                        recibo.Competencia = lines[9].Substring(9, 10);
+                        recibo.CNPJ = lines[7].Substring(10, 18).Replace("-", "").Replace(".", "").Replace("/", "");
 
-                    //Console.WriteLine(recibo.Status);
+                        Console.WriteLine(recibo.Status);
+                        Console.WriteLine(recibo.Competencia);
+                        Console.WriteLine(recibo.CNPJ);
+                        reader.Close();
+
+                        recibo.CaminhoCriarPasta = recibo.TargetPath + "\\" + recibo.CNPJ + "\\" + recibo.Competencia.Substring(6, 4) + "\\" + recibo.Competencia.Substring(3, 2) + "\\ICMS";
+
+                        if (Directory.Exists(recibo.CaminhoCriarPasta))
+                        {
+                            string NovoNome = recibo.CaminhoCriarPasta + "\\" + DateTime.Now.ToString("dd-MM-yyy HHmmss") + " " + nomeArquivo;
+
+                            Console.WriteLine(arquivo);
+                            Console.WriteLine(NovoNome);
+                            File.Move(arquivo, NovoNome);
+                        }
+
+                        else
+                        {
+                            Directory.CreateDirectory(recibo.CaminhoCriarPasta);
+
+                            string NovoNome = recibo.CaminhoCriarPasta + "\\" + DateTime.Now.ToString("dd-MM-yyy HHmmss") + " " + nomeArquivo;
+
+                            File.Move(arquivo, NovoNome);
+
+                        }
+                    }
 
                     //var files = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
                     //foreach (string s in files)
