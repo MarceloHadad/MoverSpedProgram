@@ -1,6 +1,6 @@
 ﻿namespace MoverSped.Entities
 {
-    class Sped
+    public class Sped
     {
         public string SourcePath { get; set; } = @"C:\MoverSped\RepositorioSped";
         public string TargetPath { get; set; } = @"C:\MoverSped\Organizados";

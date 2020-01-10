@@ -1,18 +1,41 @@
-﻿using MoverSped.Entities;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using MoverSped.Entities;
+using MoverSped.Interfaces;
+using MoverSped.Repositories.Pdf;
+using MoverSped.Repositories.Txt;
 using System;
 using System.Diagnostics;
 using System.IO;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MoverSped
 {
     class Program
     {
+
+        public static void ExecutarTarefa(ISpedRepository repo, FileInfo arquivo)
+        {
+            var sped = repo.ObterInfoSped(arquivo.FullName);
+        }
+
         static void Main(string[] args)
         {
+            Sped spd;
+            var ext = "txt";
+            var arquivo = new FileInfo("caminho");
+
+            if(arquivo.Extension == ".txt")
+            {
+                ExecutarTarefa(new SpedTxtRepository(), arquivo);
+            }
+
+            if (ext == "pdf")
+            {
+                ExecutarTarefa(new SpedPdfRepository(), arquivo);
+            }
+
+            //spd = new SpedTxtRepository();
+
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -71,11 +94,7 @@ namespace MoverSped
 
                     if (lines[4].Contains(recibo.EhICMS))
                     {
-                        //for(int i = 0; i<lines.Length; i++)
-                        //{
-                        //    Console.WriteLine(i + lines[i]);
-                        //}
-
+                      
                         recibo.Status = lines[8].Substring(42, 8).ToUpper();
                         recibo.Competencia = lines[9].Substring(9, 10);
                         recibo.CNPJ = lines[7].Substring(10, 18).Replace("-", "").Replace(".", "").Replace("/", "");
@@ -107,92 +126,92 @@ namespace MoverSped
                         }
                     }
 
-                    //var files = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
-                    //foreach (string s in files)
-                    //{
-                    //    //if (Path.GetExtension(s) == ".txt")
-                    //    //{
-                    //    if (string.IsNullOrEmpty(s))
-                    //    {
-                    //        break;
-                    //    }
+                    var files = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
+                    foreach (string s in files)
+                    {
+                        if (Path.GetExtension(s) == ".txt")
+                        {
+                        if (string.IsNullOrEmpty(s))
+                        {
+                            break;
+                        }
 
-                    //    else
-                    //    {
-                    //        string arquivo = Path.GetFullPath(s);
-                    //        string caminhoOrigem = Path.GetDirectoryName(s);
-                    //        string nomeArquivo = Path.GetFileName(s);
+                        else
+                        {
+                            string arquivo = Path.GetFullPath(s);
+                            string caminhoOrigem = Path.GetDirectoryName(s);
+                            string nomeArquivo = Path.GetFileName(s);
 
-                    //        foreach (string line in File.ReadLines(arquivo)) //Para cada arquivo
-                    //        {
-                    //            var ehBloco0 = line.StartsWith("|0000"); //Se o bloco iniciar com |0000
-                    //            if (!ehBloco0)
-                    //                break;
+                            foreach (string line in File.ReadLines(arquivo)) //Para cada arquivo
+                            {
+                                var ehBloco0 = line.StartsWith("|0000"); //Se o bloco iniciar com |0000
+                                if (!ehBloco0)
+                                    break;
 
-                    //            string[] Linha = line.Split("|"); // Divide a linha em pedaços
+                                string[] Linha = line.Split("|"); // Divide a linha em pedaços
 
-                    //            sped.Identificador = Linha[14]; // Atribui o valor identificador
-                    //            sped.TesteEcf = Linha[2];
+                                sped.Identificador = Linha[14]; // Atribui o valor identificador
+                                sped.TesteEcf = Linha[2];
 
-                    //            if (sped.TesteEcf == "LECF")
-                    //                break;
+                                if (sped.TesteEcf == "LECF")
+                                    break;
 
-                    //            int num;
-                    //            bool isNum = Int32.TryParse(sped.Identificador, out num);
-                    //            if (isNum)
-                    //            {
-                    //                for (int i = 0; i < sped.ValoresPis.Length; i++)
-                    //                {
-                    //                    if (sped.Identificador == sped.ValoresPis[i])
-                    //                    {
-                    //                        //Console.WriteLine("É PIS");
+                                int num;
+                                bool isNum = Int32.TryParse(sped.Identificador, out num);
+                                if (isNum)
+                                {
+                                    for (int i = 0; i < sped.ValoresPis.Length; i++)
+                                    {
+                                        if (sped.Identificador == sped.ValoresPis[i])
+                                        {
+                                            //console.writeline("é pis");
 
-                    //                        sped.Status = Linha[3];
-                    //                        sped.Competencia = Linha[6];
-                    //                        sped.Nome = Linha[8];
-                    //                        sped.CNPJ = Linha[9];
-                    //                        sped.CaminhoCriarPasta = sped.TargetPath + "\\" + sped.CNPJ + "\\" + sped.Competencia.Substring(4, 4) + "\\" + sped.Competencia.Substring(2, 2) + "\\PIS";
+                    //                        sped.status = linha[3];
+                    //                        sped.competencia = linha[6];
+                    //                        sped.nome = linha[8];
+                    //                        sped.cnpj = linha[9];
+                    //                        sped.caminhocriarpasta = sped.targetpath + "\\" + sped.cnpj + "\\" + sped.competencia.substring(4, 4) + "\\" + sped.competencia.substring(2, 2) + "\\pis";
 
-                    //                        Directory.CreateDirectory(sped.CaminhoCriarPasta);
+                    //                        directory.createdirectory(sped.caminhocriarpasta);
 
-                    //                        sped.ContadorPis++;
+                    //                        sped.contadorpis++;
                     //                    }
                     //                }
                     //            }
                     //            else
-                    //                for (int j = 0; j < sped.ValoresIcms.Length; j++)
+                    //                for (int j = 0; j < sped.valoresicms.length; j++)
                     //                {
-                    //                    if (sped.Identificador == sped.ValoresIcms[j])
+                    //                    if (sped.identificador == sped.valoresicms[j])
                     //                    {
-                    //                        //Console.WriteLine("É ICMS");
-                    //                        sped.Status = Linha[3];
-                    //                        sped.Competencia = Linha[4];
-                    //                        sped.Nome = Linha[6];
-                    //                        sped.CNPJ = Linha[7];
-                    //                        sped.CaminhoCriarPasta = sped.TargetPath + "\\" + sped.CNPJ + "\\" + sped.Competencia.Substring(4, 4) + "\\" + sped.Competencia.Substring(2, 2) + "\\ICMS";
+                    //                        //console.writeline("é icms");
+                    //                        sped.status = linha[3];
+                    //                        sped.competencia = linha[4];
+                    //                        sped.nome = linha[6];
+                    //                        sped.cnpj = linha[7];
+                    //                        sped.caminhocriarpasta = sped.targetpath + "\\" + sped.cnpj + "\\" + sped.competencia.substring(4, 4) + "\\" + sped.competencia.substring(2, 2) + "\\icms";
 
-                    //                        Directory.CreateDirectory(sped.CaminhoCriarPasta);
-                    //                        sped.ContadorIcms++;
+                    //                        directory.createdirectory(sped.caminhocriarpasta);
+                    //                        sped.contadoricms++;
                     //                    }
                     //                }
                     //        }
-                    //        if (Directory.Exists(sped.CaminhoCriarPasta))
+                    //        if (directory.exists(sped.caminhocriarpasta))
                     //        {
-                    //            string NovoNome = sped.CaminhoCriarPasta + "\\" + DateTime.Now.ToString("dd-MM-yyy HHmmss") + " " + nomeArquivo;
+                    //            string novonome = sped.caminhocriarpasta + "\\" + datetime.now.tostring("dd-mm-yyy hhmmss") + " " + nomearquivo;
 
-                    //            File.Move(arquivo, NovoNome);
+                    //            file.move(arquivo, novonome);
                     //        }
                     //    }
                     //    //}
                     //}
 
-                    //    Console.WriteLine("ICMS: " + sped.ContadorIcms);
-                    //Console.WriteLine("PIS: " + sped.ContadorPis);
+                    //    console.writeline("icms: " + sped.contadoricms);
+                    //console.writeline("pis: " + sped.contadorpis);
 
-                    //stopWatch.Stop();
-                    //// Get the elapsed time as a TimeSpan value.
-                    //TimeSpan ts = stopWatch.Elapsed;
-                    //Console.WriteLine(ts.ToString());
+                    //stopwatch.stop();
+                    //// get the elapsed time as a timespan value.
+                    //timespan ts = stopwatch.elapsed;
+                    //console.writeline(ts.tostring());
                 }
 
             }
