@@ -32,17 +32,13 @@ namespace MoverSped.Repositories
                     {
                         if (sped.Identificador == sped.EhPIS[i])
                         {
-
-                            sped.Status = Linha[3];
-                            sped.Competencia = Linha[6];
-                            sped.Nome = Linha[8];
+                            sped.RazaoSocial = sped.ConverteNome(Linha[8]);
                             sped.CNPJ = Linha[9];
-
-                            sped.CaminhoCriarPasta = sped.TargetPath
-                                + "\\" + sped.CNPJ
-                                + "\\" + sped.Competencia.Substring(4, 4)
-                                + "\\" + sped.Competencia.Substring(2, 2)
-                                + "\\PISCOFINS";
+                            sped.MesCompetencia = Linha[6].Substring(2, 2);
+                            sped.AnoCompetencia = Linha[6].Substring(4, 4);
+                            sped.Status = sped.ValidaStatus(Linha[3]);
+                            sped.TipoSped = "PISCOFINS";
+                            sped.CriarCaminhoICMS(sped.TargetPath, sped.CNPJ, sped.AnoCompetencia, sped.MesCompetencia);
                         }
                     }
                 }
@@ -52,23 +48,17 @@ namespace MoverSped.Repositories
                     {
                         if (sped.Identificador == sped.EhICMS[j])
                         {
-                            sped.Status = Linha[3];
-                            sped.Competencia = Linha[4];
-                            sped.Nome = Linha[6];
+                            sped.RazaoSocial = sped.ConverteNome(Linha[6]);
                             sped.CNPJ = Linha[7];
-
-                            sped.CaminhoCriarPasta = sped.TargetPath
-                                + "\\" + sped.CNPJ
-                                + "\\" + sped.Competencia.Substring(4, 4)
-                                + "\\" + sped.Competencia.Substring(2, 2)
-                                + "\\ICMS";
-
-                            Directory.CreateDirectory(sped.CaminhoCriarPasta);
+                            sped.MesCompetencia = Linha[4].Substring(2, 2);
+                            sped.AnoCompetencia = Linha[4].Substring(4, 4);
+                            sped.Status = sped.ValidaStatus(Linha[3]);
+                            sped.TipoSped = "ICMS";
+                            sped.CriarCaminhoICMS(sped.TargetPath, sped.CNPJ, sped.AnoCompetencia, sped.MesCompetencia);
                         }
                     }
                 }
             }
-
             return sped;
         }
     }

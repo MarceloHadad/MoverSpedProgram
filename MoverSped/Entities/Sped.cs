@@ -1,4 +1,6 @@
-﻿namespace MoverSped.Entities
+﻿using System.Text;
+
+namespace MoverSped.Entities
 {
     public class Sped
     {
@@ -12,12 +14,53 @@
         public int ContadorPis { get; set; }
         public string Identificador { get; set; }
         public string CaminhoCriarPasta { get; set; }
-        public string Status { get; set; }
-        public string Competencia { get; set; }
-        public string Nome { get; set; }
+        public string RazaoSocial { get; set; }
+        public string Grupo { get; set; }
         public string CNPJ { get; set; }
+        public string InicioVigencia { get; set; }
+        public string MesCompetencia { get; set; }
+        public string AnoCompetencia { get; set; }
+        public string Status { get; set; }
+        public string TipoSped { get; set; }
         public string TesteEcf { get; set; }
         public string NomeDoArquivo { get; set; }
 
+        public string ValidaStatus(string status)
+        {
+            if (int.Parse(status) == 0)
+                status = "Original";
+            else if (int.Parse(status) == 1)
+            {
+                status = "Retificado";
+            }
+
+            return status;
+        }
+        public string CriarCaminhoICMS(string targetPath, string cnpj, string anoCompetencia, string mesCompetencia)
+        {
+            CaminhoCriarPasta = targetPath
+                + "\\" + cnpj
+                + "\\" + anoCompetencia
+                + "\\" + MesCompetencia
+                + "\\ICMS";
+
+            return CaminhoCriarPasta;
+        }
+        public string CriarCaminhoPISCOFINS(string targetPath, string cnpj, string anoCompetencia, string mesCompetencia)
+        {
+            CaminhoCriarPasta = targetPath
+                + "\\" + cnpj
+                + "\\" + anoCompetencia
+                + "\\" + MesCompetencia
+                + "\\PISCOFINS";
+
+            return CaminhoCriarPasta;
+        }
+
+        public string ConverteNome(string razãoSocial)
+        {
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(razãoSocial);
+            return Encoding.UTF8.GetString(utf8Bytes);
+        }
     }
 }

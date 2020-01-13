@@ -4,20 +4,18 @@ using MoverSped.Entities;
 
 namespace MoverSped.Services
 {
-    public class Organizador
+    public class Manipulador
     {
         public void MoverRecibo(Recibo recibo)
         {
             recibo.DestFileName = recibo.CaminhoCriarPasta 
-                + "\\" + DateTime.Now.ToString("dd-mm-yyy hhmmss") 
+                + "\\" + DateTime.Now.ToString("dd-MM-yyy hhmmss") 
                 + " " + recibo.NomeDoArquivo;
             
             if (Directory.Exists(recibo.CaminhoCriarPasta))
             {
-
                 File.Move(recibo.SourceFileName, recibo.DestFileName);
             }
-
             else
             {
                 Directory.CreateDirectory(recibo.CaminhoCriarPasta);
@@ -29,7 +27,7 @@ namespace MoverSped.Services
         public void MoverSped(Sped sped)
         {
             sped.DestFileName = sped.CaminhoCriarPasta
-                + "\\" + DateTime.Now.ToString("dd-mm-yyy hhmmss")
+                + "\\" + DateTime.Now.ToString("dd-MM-yyy hhmmss")
                 + " " + sped.NomeDoArquivo;
 
             if (Directory.Exists(sped.CaminhoCriarPasta))
