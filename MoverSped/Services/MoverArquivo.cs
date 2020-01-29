@@ -25,14 +25,25 @@ namespace MoverSped.Services
                 {
                     break;
                 }
-                else
+
+                try
                 {
                     rec = PdfRepo.ObterInfoPDF(arquivoPdf);
+                }
+
+                catch (System.Exception ex)
+                {
+                    throw;
+                }
+
+                if (rec != null)
+                {
                     rec.SourceFileName = Path.GetFullPath(arquivoPdf);
                     rec.NomeDoArquivo = Path.GetFileName(arquivoPdf);
 
                     _org.MoverRecibo(rec);
                 }
+
             }
         }
 
@@ -54,6 +65,9 @@ namespace MoverSped.Services
                     sped = TxtRepo.ObterInfoSped(arquivoTxt);
                     sped.SourceFileName = Path.GetFullPath(arquivoTxt);
                     sped.NomeDoArquivo = Path.GetFileName(arquivoTxt);
+
+                    //System.Console.WriteLine(sped.CNPJ);
+                    //System.Console.WriteLine(sped.Status);
 
                     _org.MoverSped(sped);
                 }

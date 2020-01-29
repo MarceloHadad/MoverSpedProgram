@@ -8,19 +8,27 @@ namespace MoverSped.Services
     {
         public void MoverRecibo(Recibo recibo)
         {
-            recibo.DestFileName = recibo.CaminhoCriarPasta 
-                + "\\" + DateTime.Now.ToString("dd-MM-yyy hhmmss") 
+            recibo.DestFileName = recibo.CaminhoCriarPasta
+                + "\\" + DateTime.Now.ToString("dd-MM-yyy hhmmss")
                 + " " + recibo.NomeDoArquivo;
-            
+
             if (Directory.Exists(recibo.CaminhoCriarPasta))
             {
                 File.Move(recibo.SourceFileName, recibo.DestFileName);
             }
+
             else
             {
                 Directory.CreateDirectory(recibo.CaminhoCriarPasta);
-
                 File.Move(recibo.SourceFileName, recibo.DestFileName);
+
+                //Console.WriteLine("Dados do arquivo:");
+                //Console.WriteLine("Caminho Criar Pasta: " + recibo.CaminhoCriarPasta);
+                //Console.WriteLine("Status: " + recibo.Status);
+                //Console.WriteLine("Competencia: " + recibo.Competencia);
+                //Console.WriteLine("CNPJ: " + recibo.CNPJ);
+                //Console.WriteLine("Linha 4: " + recibo.Linha4);
+                //Console.WriteLine("Linha 5: " + recibo.Linha5);
             }
         }
 
@@ -34,6 +42,7 @@ namespace MoverSped.Services
             {
 
                 File.Move(sped.SourceFileName, sped.DestFileName);
+                Console.WriteLine("Movido");
             }
 
             else

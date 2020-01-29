@@ -18,6 +18,8 @@
         public string CNPJ { get; set; }
         public string TesteEcf { get; set; }
         public string NomeDoArquivo { get; set; }
+        public string Linha5 { get; set; }
+        public string Linha4 { get; set; }
 
     }
 }
