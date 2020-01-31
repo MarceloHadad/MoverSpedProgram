@@ -21,20 +21,7 @@ namespace MoverSped.Services
             var recFiles = Directory.EnumerateFiles(rec.SourcePath, "*.pdf*", SearchOption.AllDirectories);
             foreach (string arquivoPdf in recFiles)
             {
-                if (string.IsNullOrEmpty(arquivoPdf))
-                {
-                    break;
-                }
-
-                try
-                {
-                    rec = PdfRepo.ObterInfoPDF(arquivoPdf);
-                }
-
-                catch (System.Exception ex)
-                {
-                    throw;
-                }
+                rec = PdfRepo.ObterInfoPDF(arquivoPdf);
 
                 if (rec != null)
                 {
@@ -43,7 +30,6 @@ namespace MoverSped.Services
 
                     _org.MoverRecibo(rec);
                 }
-
             }
         }
 
@@ -55,22 +41,14 @@ namespace MoverSped.Services
             var spedFiles = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
             foreach (string arquivoTxt in spedFiles)
             {
-                if (string.IsNullOrEmpty(arquivoTxt))
-                {
-                    break;
-                }
+                sped = TxtRepo.ObterInfoSped(arquivoTxt);
+                sped.SourceFileName = Path.GetFullPath(arquivoTxt);
+                sped.NomeDoArquivo = Path.GetFileName(arquivoTxt);
 
-                else
-                {
-                    sped = TxtRepo.ObterInfoSped(arquivoTxt);
-                    sped.SourceFileName = Path.GetFullPath(arquivoTxt);
-                    sped.NomeDoArquivo = Path.GetFileName(arquivoTxt);
+                //System.Console.WriteLine(sped.CNPJ);
+                //System.Console.WriteLine(sped.Status);
 
-                    //System.Console.WriteLine(sped.CNPJ);
-                    //System.Console.WriteLine(sped.Status);
-
-                    _org.MoverSped(sped);
-                }
+                _org.MoverSped(sped);
             }
         }
     }

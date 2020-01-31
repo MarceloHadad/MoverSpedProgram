@@ -8,6 +8,9 @@ namespace MoverSped.Services
     {
         public void MoverRecibo(Recibo recibo)
         {
+            if (string.IsNullOrWhiteSpace(recibo.CaminhoCriarPasta))
+                return;
+
             recibo.DestFileName = recibo.CaminhoCriarPasta
                 + "\\" + DateTime.Now.ToString("dd-MM-yyy hhmmss")
                 + " " + recibo.NomeDoArquivo;

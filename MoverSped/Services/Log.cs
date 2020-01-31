@@ -22,6 +22,15 @@ namespace MoverSped.Services
             ExcelWorksheet sheet = workbook.Worksheets.Add("AuditoriaFiscal");
 
             var row = 2;
+
+            for (int i = 1; i <= 10; i++)
+            {
+                sheet.Cells[1, i].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                sheet.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red);
+                sheet.Cells[1, i].Style.Font.Bold = true;
+                sheet.Cells[1, i].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                sheet.Cells[1, i].Style.Font.Color.SetColor(System.Drawing.Color.White);
+            }
             sheet.Cells[1, 1].Value = "CodCliente";
             sheet.Cells[1, 2].Value = "RazaoSocial";
             sheet.Cells[1, 3].Value = "Grupo";
@@ -33,17 +42,14 @@ namespace MoverSped.Services
             sheet.Cells[1, 9].Value = "Movimento";
             sheet.Cells[1, 10].Value = "Tipo";
 
+
             var spedFiles = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
             foreach (string arquivoTxt in spedFiles)
             {
-                if (string.IsNullOrEmpty(arquivoTxt))
-                {
-                    break;
-                }
+                sped = TxtRepo.ObterInfoSped(arquivoTxt);
 
-                else
+                if (sped != null)
                 {
-                    sped = TxtRepo.ObterInfoSped(arquivoTxt);
                     sped.SourceFileName = Path.GetFullPath(arquivoTxt);
                     sped.NomeDoArquivo = Path.GetFileName(arquivoTxt);
 
@@ -57,8 +63,12 @@ namespace MoverSped.Services
                     sheet.Cells[row, 8].Value = sped.Status;
                     sheet.Cells[row, 9].Value = "Validando...";
                     sheet.Cells[row, 10].Value = sped.TipoSped;
-                    
-                    row += 1;
+
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        sheet.Cells[row, i].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    }
+                    row++;
                 }
             }
             package.Save();

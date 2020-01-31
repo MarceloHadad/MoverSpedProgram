@@ -4,7 +4,8 @@ namespace MoverSped.Entities
 {
     public class Sped
     {
-        public string SourcePath { get; set; } = @"C:\MoverSped\RepositorioSped";
+        //public string SourcePath { get; set; } = @"C:\MoverSped\RepositorioSped";
+        public string SourcePath { get; set; } = @"J:\Importação\ARQUIVOS - SPED DE ICMS\2019\12\5 - TRANSMITIDO";
         public string TargetPath { get; set; } = @"C:\MoverSped\Organizados";
         public string SourceFileName { get; set; }
         public string DestFileName { get; set; }
@@ -27,11 +28,18 @@ namespace MoverSped.Entities
 
         public string ValidaStatus(string status)
         {
-            if (int.Parse(status) == 0)
-                status = "Original";
-            else if (int.Parse(status) == 1)
+            try
             {
-                status = "Retificado";
+                if (int.Parse(status) == 0)
+                    status = "Original";
+                else if (int.Parse(status) == 1)
+                {
+                    status = "Retificado";
+                }
+            }
+            catch
+            {
+                return null;
             }
 
             return status;
@@ -57,10 +65,12 @@ namespace MoverSped.Entities
             return CaminhoCriarPasta;
         }
 
-        public string ConverteNome(string razãoSocial)
-        {
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(razãoSocial);
-            return Encoding.UTF8.GetString(utf8Bytes);
-        }
+        //public string ConverteNome(string razãoSocial)
+        //{
+        //    var razaoConvertida = Encoding.GetEncoding(razãoSocial);
+        //    //byte[] utf8Bytes = Encoding.UTF8.GetBytes(razãoSocial);
+        //    //return Encoding.UTF8.GetString(utf8Bytes);
+        //    return razaoConvertida.ToString();
+        //}
     }
 }
