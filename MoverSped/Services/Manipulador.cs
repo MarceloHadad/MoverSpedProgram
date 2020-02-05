@@ -24,7 +24,6 @@ namespace MoverSped.Services
             {
                 Directory.CreateDirectory(recibo.CaminhoCriarPasta);
                 File.Move(recibo.SourceFileName, recibo.DestFileName);
-
                 //Console.WriteLine("Dados do arquivo:");
                 //Console.WriteLine("Caminho Criar Pasta: " + recibo.CaminhoCriarPasta);
                 //Console.WriteLine("Status: " + recibo.Status);

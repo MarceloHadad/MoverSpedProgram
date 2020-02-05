@@ -3,6 +3,7 @@ using System.IO;
 using System;
 using MoverSped.Entities;
 using MoverSped.Repositories;
+using System.Text;
 
 namespace MoverSped.Services
 {
@@ -46,13 +47,12 @@ namespace MoverSped.Services
             var spedFiles = Directory.EnumerateFiles(sped.SourcePath, "*.txt*", SearchOption.AllDirectories);
             foreach (string arquivoTxt in spedFiles)
             {
+                Encoding utf8 = Encoding.UTF8;
+
                 sped = TxtRepo.ObterInfoSped(arquivoTxt);
 
                 if (sped != null)
                 {
-                    sped.SourceFileName = Path.GetFullPath(arquivoTxt);
-                    sped.NomeDoArquivo = Path.GetFileName(arquivoTxt);
-
                     sheet.Cells[row, 1].Value = "Inacessível";
                     sheet.Cells[row, 2].Value = sped.RazaoSocial;
                     sheet.Cells[row, 3].Value = "Inacessível";
